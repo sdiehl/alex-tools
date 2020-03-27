@@ -50,7 +50,7 @@ import           Language.Haskell.TH.Syntax
 import           Control.Applicative
 #endif
 
-#if MIN_VERSION_text(1,2,2)
+#if !MIN_VERSION_text(1,2,4)
 import qualified Language.Haskell.TH.Lib as TH
 import Language.Haskell.TH.Syntax (Lift, lift)
 #endif
@@ -71,7 +71,7 @@ data SourcePos = SourcePos
   , sourceFile    :: !Text
   } deriving (Show, Eq, Lift)
 
-#if MIN_VERSION_text(1,2,2)
+#if !MIN_VERSION_text(1,2,4)
 instance Lift Text where
   lift = TH.appE (TH.varE 'Text.pack) . TH.stringE . Text.unpack
 #endif
