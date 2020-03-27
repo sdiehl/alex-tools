@@ -50,6 +50,11 @@ import           Language.Haskell.TH.Syntax
 import           Control.Applicative
 #endif
 
+#if MIN_VERSION_text(1,2,2)
+import qualified Language.Haskell.TH.Lib as TH
+import Language.Haskell.TH.Syntax (Lift, lift)
+#endif
+
 data Lexeme t = Lexeme
   { lexemeText  :: !Text
   , lexemeToken :: !t
@@ -65,6 +70,11 @@ data SourcePos = SourcePos
   , sourceColumn  :: !Int
   , sourceFile    :: !Text
   } deriving (Show, Eq, Lift)
+
+#if MIN_VERSION_text(1,2,2)
+instance Lift Text where
+  lift = TH.appE (TH.varE 'Text.pack) . TH.stringE . Text.unpack
+#endif
 
 -- | Pretty print the source position without the file name.
 prettySourcePos :: SourcePos -> String
@@ -346,6 +356,3 @@ makeAlexGetByte charToByte Input { inputPos = p, inputText = text } =
                      , inputText     = text'
                      }
      x `seq` inp `seq` return (x, inp)
-
-
-
